@@ -1,0 +1,21 @@
+Feature,Importance,Rank
+Weather - Clear,0.42367104,1
+Roadway Type,0.3404036,2
+Weather - Rain,0.32285637,3
+SV Contact Area - Left,0.12016743,4
+CP Any Air Bags Deployed?,0.112655796,5
+Driver / Operator Type,0.10745933,6
+Roadway Description,0.086035594,7
+Automation System Engaged?,0.06370283,8
+Lighting,0.05335647,9
+SV Contact Area - Front Right,0.051057197,10
+CP Was Vehicle Towed?,0.043986473,11
+SV Any Air Bags Deployed?,0.037722953,12
+Weather - Severe Wind,0.036380317,13
+Crash With,0.03576215,14
+SV Contact Area - Front Left,0.033087954,15
+SV Were All Passengers Belted?,0.021935225,16
+Incident Time (24:00),0.021371137,17
+SV Contact Area - Rear,0.0142914755,18
+SV Contact Area - Rear Right,0.013233332,19
+SV Precrash Speed (MPH),0.008302228,20

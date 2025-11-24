@@ -1,0 +1,21 @@
+Feature,Importance,Rank
+SV Contact Area - Front Right,0.73583305,1
+SV Contact Area - Front Left,0.2639385,2
+SV Contact Area - Right,0.18742199,3
+Incident Time (24:00),0.18517134,4
+Weather - Clear,0.17382015,5
+Roadway Surface,0.1429252,6
+Crash With,0.088898174,7
+Driver / Operator Type,0.06910595,8
+Weather - Fog/Smoke,0.06434386,9
+State,0.056991436,10
+SV Contact Area - Left,0.05295514,11
+ADS Equipped?,0.032535553,12
+SV Were All Passengers Belted?,0.030560719,13
+Weather - Snow,0.028918311,14
+Posted Speed Limit (MPH),0.025393557,15
+Model Year,0.02382116,16
+SV Any Air Bags Deployed?,0.02293428,17
+SV Contact Area - Rear,0.022396803,18
+Lighting,0.020196242,19
+Weather - Severe Wind,0.017912986,20

@@ -1,201 +1,123 @@
-# TabDiff: a Mixed-type Diffusion Model for Tabular Data Generation
 
-<p align="center">
-  <a href="https://github.com/MinkaiXu/TabDiff/blob/main/LICENSE">
-    <img alt="MIT License" src="https://img.shields.io/badge/License-MIT-yellow.svg">
-  </a>
-  <a href="https://openreview.net/forum?id=swvURjrt8z">
-    <img alt="Openreview" src="https://img.shields.io/badge/review-OpenReview-blue">
-  </a>
-  <a href="https://arxiv.org/abs/2410.20626">
-    <img alt="Paper URL" src="https://img.shields.io/badge/cs.LG-2410.20626-B31B1B.svg">
-  </a>
-</p>
-
-<div align="center">
-  <img src="images/tabdiff_demo.gif" alt="Model Logo" width="800" style="margin-left:'auto' margin-right:'auto' display:'block'"/>
-  <p><em>Figure 1: Visualing the generative process of TabDiff. A high-quality version of this video can be found at <a href="images/tabdiff_demo.mp4" download>tabdiff_demo.mp4</a></em></p>
-</div>
-
-This repository provides the official implementation of TabDiff: a Mixed-type Diffusion Model for Tabular Data Generation (ICLR 2025).
-
-## Latest Update
-- [2025.04]：The categorical-heavy dataset **[Diabetes](https://archive.ics.uci.edu/dataset/296/diabetes+130-us+hospitals+for+years+1999-2008)** evaluated in the paper has now been released!
-- [2025.02]：Our code is finally released! We have released part of the tested datasets. The rest will be released soon!
-
-## Introduction
-
-<div align="center">
-  <img src="images/tabdiff_flowchart.jpg" alt="Model Logo" width="800" style="margin-left:'auto' margin-right:'auto' display:'block'"/>
-  <p><em>Figure 2: The high-level schema of TabDiff</a></em></p>
-</div>
-TabDiff is a unified diffusion framework designed to model all muti-modal distributions of tabular data in a single model. Its key innovations include:  
-
-1) Framing the joint diffusion process in continuous time,
-2) A feature-wised learnable diffusion process that offsets the heterogeneity across different feature distributions,
-3) Classifier-free guidance conditional generation for missing column value imputation. 
-
-The schema of TabDiff is presented in the figure above. For more details, please refer to [our paper](https://arxiv.org/abs/2410.20626).
-
-
-## Environment Setup
-
-Create the main environment with [tabdiff.yaml](tabdiff.yaml). This environment will be used for all tasks except for the evaluation of additional data fidelity metrics (i.e., $\alpha$-precision and $\beta$-recall scores)
-
+### 目录结构
 ```
-conda env create -f tabdiff.yaml
+生成对抗表格/
+├─ data/                      
+│  ├─ avoid.json              # 列索引与互斥组配置等
+│  └─ split_data/split_data/  # train_original.csv 等原始划分
+├─ results/
+│  └─ plots/                  # 各模型生成的图表与CSV其中model_all是各个模型总的评价指标,model是各个模型小类的指标汇总表格
+├─ smote/
+│  ├─ generate_synthetic_data.py          # SMOTE 合成
+│  └─ marginal_correlation_evaluation.py  # 边际/相关性评估
+├─ CTGAN/
+│  ├─ generate_synthetic_data.py          # CTGAN 合成
+│  └─ marginal_correlation_evaluation.py           # 边际/相关性评估
+├─ adasyn/
+│  ├─ generate_synthetic_data.py          # ADASYN 合成
+│  └─ marginal_correlation_evaluation.py  # 边际/相关性评估
+├─ TabDiff/
+│  ├─ process_dataset.py                  # 数据预处理
+│  ├─ utils_train.py                      # 训练工具与封装
+│  └─ main.py                             # 训练主入口
+├─ tabdiff_evaluation.py      # 使用合成数据训练、原始测试集评估 + SHAP+roc曲线
+├─ orignial_evaluation.py     # 原始数据训练与评估 + SHAP+roc曲线
+├─ synthetic_data_spearman.py # 合成 vs 原始 Spearman 相关性差值热力图
+├─ synthetic_data_comparison.py# 合成方法边际/相关性得分对比
+├─ models_charts.py           # 各模型跨方法性能对比图 + 汇总图
+├─ summary.py                 # 汇总生成各算法的 summary CSV
+└─ bayesian_optimization.py   # 超参搜索脚本
 ```
 
-Create another environment with [synthcity.yaml](synthcity.yaml) to evaluate additional data fidelity metrics
 
-```
-conda env create -f synthcity.yaml
-```
-
-## Datasets Preparation
-
-### Using the datasets experimented in the paper
-
-Download raw datasets:
-
-```
-python download_dataset.py
+### 运行步骤
+准备 `data/avoid.json` 与原始 CSV
+1) 生成 adasyn 合成数据（支持互斥列约束）
+```bash
+不启用weather列互斥
+python generate_synthetic_data.py --dth 0.1 --b 1.0 --k 5 --weather-exclusive false
+启用weather
+python generate_synthetic_data.py --dth 0.1 --b 1.0 --k 5
 ```
 
-Process datasets:
-
+```bash
+边际得分以及相关性得分
+python marginal_correlation_evaluation.py
 ```
+
+
+2) 生成 CTGAN 合成数据（支持互斥列约束）
+```bash
+默认互斥是关闭的
+python train_avoid_dataset.py 
+启用互斥
+python train_avoid_dataset.py --weather-exclusivity true 
+```
+
+```bash
+边际得分以及相关性得分
+python marginal_correlation_evaluation.py
+```
+
+3) 生成 smote 合成数据（支持互斥列约束）
+```bash
+generate_synthetic_data.py代码修改 enforce_weather_exclusivity 变量：
+#设置为 True：weather 列互斥（每个样本只能有一个 weather 条件）
+enforce_weather_exclusivity = True
+# 设置为 False：weather 列不互斥（允许多个 weather 条件同时存在）
+enforce_weather_exclusivity = False
+python generate_synthetic_data.py 
+```
+
+```bash
+边际得分以及相关性得分
+python marginal_correlation_evaluation.py
+```
+
+4) 生成 TabDiff 合成数据（支持互斥列约束）
+```bash
+数据预处理
 python process_dataset.py
+训练模型
+python main.py --dataname avoid --mode train --gpu 0 --no_wandb --weather_exclusive
+生成合成数据并计算相关性得分和边际得分
+python main.py \
+      --dataname avoid \
+      --mode test \
+      --gpu 0 \
+      --balance_target supplement \
+      --weather_exclusive \
+      --num_samples_to_generate 1785 \
+      -no_wandb
 ```
 
-### Using your own dataset
+5) 可视化
+1. 运行 `smote/generate_synthetic_data.py` 生成 SMOTE 合成数据
+2. 运行 `synthetic_data_spearman.py` 生成相关性差值热力图
+3. 运行 `tabdiff_evaluation.py` 与/或 `orignial_evaluation.py` 对各个模型做评估并生成shap可视化，以及roc
+4. 运行 `summary.py` 生成各算法汇总 CSV
+5. 运行 `models_charts.py` 生成综合对比图
+6. 运行 `synthetic_data_comparison.py` 相关性得分和边际分布得分对比图
 
-First, create a directory for your dataset in [./data](./data):
-```
-cd data
-mkdir <NAME_OF_YOUR_DATASET>
-```
-
-Compile your raw tabular data in .csv format. **The first row should be the header** indicating the name of each column, and the remaining rows are records. After finishing these steps, place you data's csv file in the directory you just created and name it as <NAME_OF_YOUR_DATASET>.csv. 
-
-Then, create <NAME_OF_YOUR_DATASET>.json in [./data/Info](./data/Info). Write this file with the metadata of your dataset, covering the following information:
-```
-{
-    "name": "<NAME_OF_YOUR_DATASET>",
-    "task_type": "[NAME_OF_TASK]", # binclass or regression
-    "header": "infer",
-    "column_names": null,
-    "num_col_idx": [LIST],  # list of indices of numerical columns
-    "cat_col_idx": [LIST],  # list of indices of categorical columns
-    "target_col_idx": [list], # list of indices of the target columns (for MLE)
-    "file_type": "csv",
-    "data_path": "data/<NAME_OF_YOUR_DATASET>/<NAME_OF_YOUR_DATASET>.csv"
-    "test_path": null,
-}
-```
-
-### Important Notes When Creating the Info File
-- The MLE evaluation and the imputation task (see later sections for details) assume that one column of your data is the regression or classification target. To enable these tasks, you will need to specify `target_col_idx`. If you don't need to evalute MLE, you can comment out the following line: https://github.com/MinkaiXu/TabDiff/blob/0c4fc3bbfa19046d36c5dce64628df52d5c73d15/tabdiff/main.py#L152
-- The fields `target_col_idx`, `num_col_idx` and `cat_col_idx` must be multually exclusive—no column should appear in more than one of these lists. 
-- Set the task_type to "regression" if the target column is numerical, or "binclass" if it is categorical.
-
-Finally, run the following command to process your dataset:
-```
-python process_dataset.py --dataname <NAME_OF_YOUR_DATASET>
-```
-
-## Training TabDiff
-
-To train an unconditional TabDiff model across the entire table, run
-
-```
-python main.py --dataname <NAME_OF_DATASET> --mode train
-```
-
-Current Options of ```<NAME_OF_DATASET>``` are: adult, default, shoppers, magic, beijing, news
-
-Wanb logging is enabled by default. To disable it and log locally, add the ```--no_wandb``` flag.
-
-To disable the learnable noise schedules, add the ```--non_learnable_schedule```. Please note that in order for the code to test/sample from such model properly, you need to add this flag for all commands below.
-
-To specify your own experiment name, which will be used for logging and saving files, add ```--exp_name <your experiment name>```. This flag overwrites the default experiment name (learnable_schedule/non_learnable_schedule), so, similar to ```--non_learnable_schedule```, once added to training, you need to add it to all following commands as well.
-
-## Sampling and Evaluating TabDiff (Density, MLE, C2ST)
-
-To sample synthetic tables from trained TabDiff models and evaluate them, run
-```
-python main.py --dataname <NAME_OF_DATASET> --mode test --report --no_wandb
-```
-
-This will sample 20 synthetic tables randomly. Meanwhile, it will evaluate the density, mle, and c2st scores for each sample and report their average and standard deviation. The results will be printed out in the terminal, and the samples and detailed evaluation results will be placed in ./eval/report_runs/<EXP_NAME>/<NAME_OF_DATASET>/.
-
-## Evaluating on Additional Fidelity Metrics ($\alpha$-precision and $\beta$-recall scores)
-To evaluate TabDiff on the additional fidelity metrics ($\alpha$-precision and $\beta$-recall scores), you need to first make sure that you have already generated some samples by the previous commands. Then, you need to switch to the `synthcity` environment (as the synthcity packet used to compute those metrics conflicts with the main environment), by running
-```
-conda activate synthcity
-```
-Then, evaluate the metrics by running
-```
-python eval/eval_quality.py --dataname <NAME_OF_DATASET>
-```
-
-Similarly, the results will be printed out in the terminal and added to ./eval/report_runs/<EXP_NAME>/<NAME_OF_DATASET>/
-
-## Evaluating Data Privacy (DCR score)
-To evalute the privacy metric DCR score, you first need to retrain all the models, as the metric requires an equal split between the training and testing data (our initial splits employ a 90/10 ratio). To retrain with an equal split, run the training command but append `_dcr` to ```<NAME_OF_DATASET>```
-```
-python main.py --dataname <NAME_OF_DATASET>_dcr --mode train
-```
-
-Then, test the models on DCR with the same `_dcr` suffix
-```
-python main.py --dataname <NAME_OF_DATASET>_dcr --mode test --report --no_wandb
-```
+### results可视化（部分）
+- `results/plots/lr_comprehensive_performance.png` 等：按算法的综合性能对比图（Original/Smote/CtGan/AdaSyn/TabDiff）
+- `results/plots/all_algorithms_summary_comparison.png`：总体汇总对比图
+- `results/plots/spearman_correlation_difference_*.png`：合成 vs 原始 Spearman 相关性差值热力图
+- `results/plots/*_summary.csv`：各算法指标汇总（由 `summary.py` 生成）
+- `results/plots/synthetic_data_comparison.png`：不同合成方法边际/相关性得分对比示例
+- `results/roc/adasyn`：不同合成方法的roc曲线
+- `results/shap/adasyn`：不同合成方法的shap可视化
+- `results/roc/adasyn`：不同合成方法的roc曲线
+- `results/smote/evaluation_results.csv`：smote合成数据总的评价指标
+- `results/smote/per_class_metrics.csv`：smote合成数据各个小类的评价指标
+- `results/tabdiff/evaluation_results.csv`：tabdiff合成数据总的评价指标
+- `results/tabdiff/per_class_metrics.csv`：tabdiff合成数据各个小类的评价指标
+- `results/adasyn/evaluation_results.csv`：adasyn合成数据总的评价指标
+- `results/adasyn/per_class_metrics.csv`：adasyn合成数据各个小类的评价指标
+- `results/ctgan/evaluation_results.csv`：ctgan合成数据总的评价指标
+- `results/ctgan/per_class_metrics.csv`：ctgan合成数据各个小类的评价指标
 
 
 
-## Missing Value Imputation with Classifier-free Guidance (CFG)
-Our current experiments only include imputing the target column. However, our implementation, located at ```sample_impute()``` in [unified_ctime_diffusion.py](./tabdiff/models/unified_ctime_diffusion.py), should support imputing multiple columns with different data types.
 
-### Training Guidance Model
-In order to enable classifier-free guidance (CFG), you need to first train an unconditional guidance model on the target column by running the training command with the `--y_only` flag
-```
-python main.py --dataname <NAME_OF_DATASET> --mode train --y_only
-```
 
-### Sampling Imputed Tables
-With the trained guidance model, you can then impute the missing target column by running the testing command with the `--impute` flag
-```
-python main.py --dataname <NAME_OF_DATASET> --mode test --impute --no_wandb
-```
-This will, by default, randomly produce 50 imputed tables and save them to ./impute/<NAME_OF_DATASET>/<EXP_NAME>.
-
-### Evaluating Imputation
-You can then evaluate the imputation quality by running
-```
-python eval_impute.py --dataname <NAME_OF_DATASET>
-```
-
-## License
-
-This work is licensed undeer the MIT License.
-
-## Acknowledgement
-This repo is built upon the previous work TabSyn's [[codebase]](https://github.com/amazon-science/tabsyn). Many thanks to Hengrui!
-
-## Citation
-Please consider citing our work if you find it helpful in your research!
-```
-@inproceedings{
-shi2025tabdiff,
-title={TabDiff: a Mixed-type Diffusion Model for Tabular Data Generation},
-author={Juntong Shi and Minkai Xu and Harper Hua and Hengrui Zhang and Stefano Ermon and Jure Leskovec},
-booktitle={The Thirteenth International Conference on Learning Representations},
-year={2025},
-url={https://openreview.net/forum?id=swvURjrt8z}
-}
-```
-## Contact
-If you encounter any problem, please file an issue on this GitHub repo.
-
-If you have any question regarding the paper, please contact Minkai at [minkai@stanford.edu](minkai@stanford.edu) or Juntong at [shisteve@usc.edu](shisteve@usc.edu).

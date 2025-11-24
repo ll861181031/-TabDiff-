@@ -1,0 +1,37 @@
+Feature,Importance
+Roadway Type,0.13064060032258124
+Incident Time (24:00),0.1150486379071756
+Weather - Rain,0.06318221568621481
+SV Contact Area - Front Left,0.05654821011201118
+SV Contact Area - Rear Left,0.05369290462391935
+Weather - Clear,0.0450257886827708
+CP Pre-Crash Movement,0.01762594649148965
+Lighting,0.01286033103522269
+SV Contact Area - Rear,0.011749662054050319
+State,0.011623670906729049
+SV Contact Area - Right,0.009959208607160552
+SV Contact Area - Front,0.008822030668785041
+Crash With,0.008536942872948872
+SV Contact Area - Rear Right,0.006410321549776214
+CP Any Air Bags Deployed?,0.005738757857612321
+CP Was Vehicle Towed?,0.004815001367071777
+SV Precrash Speed (MPH),0.004702660371769633
+Weather - Snow,0.0045048164908673485
+ADS Equipped?,0.004228782701264032
+SV Contact Area - Left,0.0035506308874955427
+Driver / Operator Type,0.002731631380182798
+Weather - Cloudy,0.002027939605847304
+SV Were All Passengers Belted?,0.0020231753872530208
+Automation System Engaged?,0.001458029534267025
+SV Contact Area - Front Right,0.0012967745774790731
+SV Any Air Bags Deployed?,0.0012367095451498913
+Make,0.0005862186658077166
+SV Pre-Crash Movement,0.0
+Roadway Description,0.0
+Roadway Surface,0.0
+Weather - Severe Wind,0.0
+Weather - Fog/Smoke,0.0
+Model Year,0.0
+Mileage,0.0
+Posted Speed Limit (MPH),0.0
+SV Was Vehicle Towed?,0.0

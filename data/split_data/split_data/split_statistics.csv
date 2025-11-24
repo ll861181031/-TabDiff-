@@ -1,0 +1,7 @@
+Severity,Train_Count,Train_Ratio(%),Test_Count,Test_Ratio(%),Total_Original
+Fatality,16,3.4%,6,3.0%,22
+Minor,57,12.3%,25,12.5%,82
+Moderate,23,5.0%,10,5.0%,33
+No Injuries Reported,357,76.9%,154,77.0%,511
+Serious,11,2.4%,5,2.5%,16
+TOTAL,464,100.0%,200,100.0%,664

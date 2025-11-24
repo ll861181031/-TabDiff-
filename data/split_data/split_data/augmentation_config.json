@@ -1,0 +1,11 @@
+{
+  "target_count_per_class": 357,
+  "total_to_generate": 1321,
+  "augmentation_needed": {
+    "Fatality": 341,
+    "Minor": 300,
+    "Moderate": 334,
+    "No Injuries Reported": 0,
+    "Serious": 346
+  }
+}

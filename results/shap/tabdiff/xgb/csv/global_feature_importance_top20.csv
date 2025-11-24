@@ -1,0 +1,21 @@
+Feature,Importance,Rank
+SV Contact Area - Right,0.85771877,1
+Roadway Surface,0.36957532,2
+Weather - Cloudy,0.3114031,3
+SV Contact Area - Rear,0.19366083,4
+Weather - Clear,0.16954805,5
+SV Were All Passengers Belted?,0.103927836,6
+Incident Time (24:00),0.10039486,7
+Weather - Rain,0.0862581,8
+SV Pre-Crash Movement,0.08476977,9
+Roadway Type,0.08140195,10
+SV Any Air Bags Deployed?,0.077818505,11
+CP Any Air Bags Deployed?,0.07470369,12
+Driver / Operator Type,0.07072188,13
+Weather - Snow,0.06972418,14
+SV Contact Area - Front Right,0.0463295,15
+Roadway Description,0.04565235,16
+CP Pre-Crash Movement,0.043466,17
+SV Precrash Speed (MPH),0.039592333,18
+SV Contact Area - Front,0.031816613,19
+CP Was Vehicle Towed?,0.031808026,20

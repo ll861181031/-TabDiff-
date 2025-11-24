@@ -1,0 +1,5 @@
+﻿Method,Marginal_Score,Correlation_Score
+TabDiff,0.8992,0.9172
+CTGAN,0.7717,0.8402
+SMOTE,0.6538,0.9492
+ADASYN,0.772,0.8187
