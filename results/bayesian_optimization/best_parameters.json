@@ -1,0 +1,41 @@
+{
+  "LR": {
+    "C": 4.463869201007377,
+    "penalty": "l1",
+    "solver": "liblinear",
+    "max_iter": 3404
+  },
+  "DT": {
+    "max_depth": 45,
+    "min_samples_split": 2,
+    "min_samples_leaf": 5,
+    "criterion": "entropy",
+    "max_features": null
+  },
+  "RF": {
+    "n_estimators": 751,
+    "max_depth": 7,
+    "max_features": 12,
+    "min_samples_leaf": 3,
+    "min_samples_split": 9,
+    "criterion": "gini"
+  },
+  "XGB": {
+    "n_estimators": 271,
+    "learning_rate": 0.01528753660762763,
+    "min_child_weight": 6,
+    "max_depth": 5,
+    "gamma": 0.1,
+    "subsample": 0.9229986269281187,
+    "colsample_bytree": 1.0,
+    "reg_alpha": 0.1,
+    "reg_lambda": 0.17760800626020212
+  },
+  "SVM": {
+    "C": 1.0879974162858723,
+    "gamma": "scale",
+    "kernel": "rbf",
+    "tol": 0.08612702679817037,
+    "max_iter": 8611
+  }
+}

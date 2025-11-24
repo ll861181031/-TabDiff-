@@ -1,0 +1,35 @@
+# Core deep learning framework
+torch>=1.9.0
+torchvision>=0.10.0
+
+# Data processing and analysis
+numpy>=1.21.0
+pandas>=1.3.0
+scikit-learn>=1.0.0
+
+# Machine learning models
+xgboost>=1.5.0
+
+# Visualization and plotting
+plotly>=5.0.0
+Pillow>=8.0.0
+
+# Progress bars
+tqdm>=4.62.0
+
+# Experiment tracking
+wandb>=0.12.0
+
+# Synthetic data evaluation
+synthcity>=0.2.0
+sdmetrics>=0.8.0
+
+# Evaluation metrics
+prdc>=0.1.0
+
+# Note: The following are built-in Python modules and don't need to be installed:
+# argparse, json, pickle, glob, os, sys, time, warnings, logging, copy, random, math, abc, io
+
+# Optional: CUDA support (uncomment if using GPU)
+# torch-audio>=0.9.0
+# torchaudio>=0.9.0
